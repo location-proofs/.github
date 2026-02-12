@@ -1,24 +1,24 @@
 # Location Proofs
 
-**Composable, verifiable location proof plugins for decentralized applications.**
+**Composable, verifiable location proof plugins for verifiable applications.**
 
 ---
 
 ## Overview
 
-Location Proofs is an open ecosystem of location verification plugins that work with the [Astral SDK](https://github.com/DecentralizedGeo/astral-sdk). Each plugin implements a different proof-of-location system, from device-based GPS signatures to infrastructure network measurements.
+The Location Proof Framework is building an open ecosystem of location verification plugins that work with the [Astral Protocol](https://docs.astral.global). Each plugin collects location evidence from a different proof-of-location system, from device-based GPS signatures to infrastructure network measurements.
 
 **Multifactor location verification** - Combine multiple proof types to increase confidence:
-- 🔐 **Device-based** - ProofMode (PGP-signed GPS + hardware attestation)
-- 🌐 **Infrastructure-based** - WitnessChain (network latency triangulation)
-- 🛰️ **Future** - Satellite signals, WiFi positioning, zkSNARKs, and more
+- **Device-based** - ProofMode (PGP-signed GPS + hardware attestation)
+- **Infrastructure-based** - WitnessChain (network latency triangulation)
+- **Future** - Satellite signals, WiFi positioning, zkSNARKs, and more
 
 ## Available Plugins
 
 | Plugin | Type | Status | NPM |
 |--------|------|--------|-----|
 | [**plugin-proofmode**](https://github.com/location-proofs/plugin-proofmode) | Device-based | ✅ Alpha | [`@location-proofs/plugin-proofmode`](https://www.npmjs.com/package/@location-proofs/plugin-proofmode) |
-| [**plugin-witnesschain**](https://github.com/location-proofs/plugin-witnesschain) | Infrastructure | 🚧 In Development | *Not yet published* |
+| [**plugin-witnesschain**](https://github.com/location-proofs/plugin-witnesschain) | Infrastructure | 🚧 In development | [`@location-proofs/plugin-witnesschain`](https://www.npmjs.com/package/@location-proofs/plugin-witnesschain) |
 
 ## Quick Start
 
@@ -32,21 +32,24 @@ import { ProofModePlugin } from '@location-proofs/plugin-proofmode';
 
 const astral = new AstralSDK({ chainId: 84532, signer: wallet });
 
-// Register plugin
+// Register plugins
 astral.plugins.register(new ProofModePlugin());
 
-// Create location proof
+// Create multifactor proof
 const claim = {
   location: { type: 'Point', coordinates: [-73.9857, 40.7484] },
   radius: 100,
   time: { start: Date.now() / 1000, end: Date.now() / 1000 + 3600 }
 };
 
-const stamp = await astral.stamps.create('proofmode', proofModeSignals);
-const proof = astral.proofs.create(claim, [stamp]);
+const stamps = [
+  await astral.stamps.create('proofmode', proofModeSignals),
+  // Add more proof types for higher confidence
+];
 
-// SDK evaluates credibility
+const proof = astral.proofs.create(claim, stamps);
 const credibility = await astral.proofs.verify(proof);
+
 console.log(credibility.score); // Multidimensional credibility vector
 ```
 
@@ -91,7 +94,7 @@ console.log(credibility.score); // Multidimensional credibility vector
 | **Verification Cost** | Low (crypto + SafetyNet check) | Medium (network measurements) |
 | **Best For** | Photo/video geotagging | DePIN node verification |
 
-**Multifactor approach:** Combine both to get high-precision device proof + independent infrastructure validation.
+**Multifactor approach:** Combine multiple compatible plugins to get high-precision device proof + independent infrastructure validation. (We're currently researching whether ProofMode and WitnessChain can be used to verify the location of the same device.)
 
 ## Contributing a Plugin
 
@@ -121,14 +124,14 @@ interface LocationProofPlugin {
 ## Research
 
 Explore the academic foundations of proof-of-location systems:
-- [**location-proofs-research**](https://github.com/location-proofs/location-proofs-research) - Survey of PoL systems, threat models, and verification methods
+- [**Research Repository**](https://github.com/location-proofs/research) - Survey of PoL systems, threat models, and verification methods
 
 ## Resources
 
-- 📚 [Documentation](https://docs.astral.global)
-- 🔧 [Astral SDK](https://github.com/DecentralizedGeo/astral-sdk)
-- 💬 [Discord](https://discord.gg/astral) *(coming soon)*
-- 🐦 [Twitter](https://twitter.com/AstralProtocol)
+- [Documentation](https://docs.astral.global)
+- [Astral SDK](https://github.com/DecentralizedGeo/astral-sdk)
+- [Telegram](https://t.me/+UkTOSXnDcDM5ZTBk) *(coming soon)*
+- [Twitter](https://twitter.com/AstralProtocol)
 
 ## Ecosystem
 
@@ -143,4 +146,4 @@ All plugins are MIT licensed. See individual repositories for details.
 
 ---
 
-**Built with ❤️ by the Astral community**
+**Built with ✨ by the Astral community**
