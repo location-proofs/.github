@@ -18,7 +18,7 @@ Location Proofs is an open ecosystem of location verification plugins that work 
 | Plugin | Type | Status | NPM |
 |--------|------|--------|-----|
 | [**plugin-proofmode**](https://github.com/location-proofs/plugin-proofmode) | Device-based | ✅ Alpha | [`@location-proofs/plugin-proofmode`](https://www.npmjs.com/package/@location-proofs/plugin-proofmode) |
-| [**plugin-witnesschain**](https://github.com/location-proofs/plugin-witnesschain) | Infrastructure | ✅ Alpha | [`@location-proofs/plugin-witnesschain`](https://www.npmjs.com/package/@location-proofs/plugin-witnesschain) |
+| [**plugin-witnesschain**](https://github.com/location-proofs/plugin-witnesschain) | Infrastructure | 🚧 In Development | *Not yet published* |
 
 ## Quick Start
 
@@ -32,24 +32,21 @@ import { ProofModePlugin } from '@location-proofs/plugin-proofmode';
 
 const astral = new AstralSDK({ chainId: 84532, signer: wallet });
 
-// Register plugins
+// Register plugin
 astral.plugins.register(new ProofModePlugin());
 
-// Create multifactor proof
+// Create location proof
 const claim = {
   location: { type: 'Point', coordinates: [-73.9857, 40.7484] },
   radius: 100,
   time: { start: Date.now() / 1000, end: Date.now() / 1000 + 3600 }
 };
 
-const stamps = [
-  await astral.stamps.create('proofmode', proofModeSignals),
-  // Add more proof types for higher confidence
-];
+const stamp = await astral.stamps.create('proofmode', proofModeSignals);
+const proof = astral.proofs.create(claim, [stamp]);
 
-const proof = astral.proofs.create(claim, stamps);
+// SDK evaluates credibility
 const credibility = await astral.proofs.verify(proof);
-
 console.log(credibility.score); // Multidimensional credibility vector
 ```
 
