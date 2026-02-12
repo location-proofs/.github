@@ -124,6 +124,8 @@ interface LocationProofPlugin {
 ## Research
 
 Explore the academic foundations of proof-of-location systems:
+- [**Towards Harder Location Proofs**](https://collective.flashbots.net/t/towards-harder-location-proofs/5323) - Flashbots Collective discussion
+- [**OSF Preprint**](https://osf.io/bg2uq) - Open Science Framework research paper
 - [**Research Repository**](https://github.com/location-proofs/research) - Survey of PoL systems, threat models, and verification methods
 
 ## Resources
